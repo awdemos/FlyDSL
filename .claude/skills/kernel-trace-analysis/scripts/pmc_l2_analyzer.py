@@ -69,7 +69,6 @@ def main():
     print(f"  Dispatches matched: {ndisp}")
     hit = agg.get("TCC_HIT_sum", 0)
     miss = agg.get("TCC_MISS_sum", 0)
-    req = agg.get("TCC_REQ_sum", 0)
     ea = agg.get("TCC_EA0_RDREQ_sum", 0)
     ea32 = agg.get("TCC_EA0_RDREQ_32B_sum", 0)
     dram = agg.get("TCC_EA0_RDREQ_DRAM_sum", 0)

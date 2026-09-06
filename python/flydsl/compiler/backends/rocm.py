@@ -163,20 +163,3 @@ def _iter_gpu_kernel_funcs(module):
         for op in top.regions[0].blocks[0].operations:
             if op.operation.name == "gpu.func" and ("kernel" in op.attributes or "gpu.kernel" in op.attributes):
                 yield op
-
-
-def _set_passthrough(func_op, key: str, value: str) -> None:
-    """Replace one LLVM passthrough key while preserving unrelated entries."""
-    from ..._mlir import ir
-
-    def _entry_key(entry):
-        try:
-            pair = ir.ArrayAttr(entry)
-            return ir.StringAttr(pair[0]).value if len(pair) else None
-        except (TypeError, ValueError):
-            return None
-
-    new_entry = ir.ArrayAttr.get([ir.StringAttr.get(key), ir.StringAttr.get(value)])
-    existing = func_op.attributes["passthrough"] if "passthrough" in func_op.attributes else None
-    kept = [entry for entry in existing if _entry_key(entry) != key] if existing is not None else []
-    func_op.attributes["passthrough"] = ir.ArrayAttr.get([*kept, new_entry])
